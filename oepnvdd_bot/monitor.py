@@ -4,8 +4,18 @@ from telegram.parsemode import ParseMode
 
 
 def _monitor_cmd(bot, update, args):
-    stop = ' '.join(args)
-    departures = dvb.monitor(stop)
+    if len(args) > 1:
+        if args[-1].isdigit():
+            offset = args[-1]
+            stop = ' '.join(args[:-1])
+        else:
+            offset = 0
+            stop = ' '.join(args)
+    else:
+        offset = 0
+        stop = ' '.join(args)
+
+    departures = dvb.monitor(stop, offset=offset)
 
     if len(departures) == 0:
         update.message.reply_text('Keine Abfahrten gefunden.')
