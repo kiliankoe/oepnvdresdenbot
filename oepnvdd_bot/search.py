@@ -43,7 +43,7 @@ def _nearest_stops(bot, update):
     # thanks to @dirko for the original implementation of this!
     user_position = geopy.Point(update.message.location.latitude, update.message.location.longitude)
 
-    with open('../all_stops.csv', 'r', encoding='utf-8') as file:
+    with open('all_stops.csv', 'r', encoding='utf-8') as file:
         csv_reader = csv.reader(file, delimiter=';')
         stops = []
         for row in csv_reader:
