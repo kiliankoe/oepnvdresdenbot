@@ -1,1 +1,4 @@
 .git
+venv
+.idea
+__pycache__
