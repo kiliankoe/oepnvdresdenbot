@@ -8,5 +8,5 @@ def _route_cmd(bot, update, args):
     return
 
 
-route_handler = CommandHandler('route', _route_cmd)
-route_shorthand_handler = CommandHandler('r', _route_cmd)
+route_handler = CommandHandler('route', _route_cmd, pass_args=True)
+route_shorthand_handler = CommandHandler('r', _route_cmd, pass_args=True)
