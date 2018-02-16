@@ -16,6 +16,7 @@ if __name__ == '__main__':
 
     dispatcher.add_handler(search_handler)
     dispatcher.add_handler(search_shorthand_handler)
+    dispatcher.add_handler(nearest_stations_handler)
 
     dispatcher.add_handler(route_handler)
     dispatcher.add_handler(route_shorthand_handler)
