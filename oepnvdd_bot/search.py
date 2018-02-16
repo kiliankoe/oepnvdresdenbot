@@ -47,7 +47,7 @@ def _nearest_stops(bot, update):
         csv_reader = csv.reader(file, delimiter=';')
         stops = []
         for row in csv_reader:
-            name = f'{row[1]} {row[2]}'
+            name = f'{row[1]}'
             lat = float(row[3])
             lng = float(row[4])
             point = geopy.Point(lat, lng)
