@@ -4,6 +4,14 @@ from telegram.parsemode import ParseMode
 
 
 def _monitor_cmd(bot, update, args):
+    if len(args) == 0:
+        update.message.reply_text('Für welche Haltestelle soll ich nach kommenden Abfahrten suchen? Hier ein paar '
+                                  'Nutzungsbeispiele:\n\n'
+                                  '/abfahrten Albertplatz - Die nächsten Abfahrten am Albertplatz\n'
+                                  '/abfahrten Postplatz 10 - Die nächsten Abfahrten am Postplatz in mind. 10 Minuten\n'
+                                  '/a Hauptbahnhof - /a ist kurz für /abfahrten und funktioniert exakt gleich')
+        return
+
     if len(args) > 1:
         if args[-1].isdigit():
             offset = args[-1]
