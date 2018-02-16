@@ -10,6 +10,10 @@ NEAREST_STOPS_COUNT = 5
 
 
 def _search_cmd(bot, update, args):
+    update.message.reply_text('Dieser Befehl funktioniert leider aktuell nicht. '
+                              'Probiere es doch bitte demnächst wieder.')
+    return
+
     query = ' '.join(args)
     results = dvb.find(query)
 
