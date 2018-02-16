@@ -34,7 +34,7 @@ def _monitor_cmd(bot, update, args):
 
 def _format_departure(dep: dict) -> str:
     line = dep.get('line').ljust(5)
-    direction = dep.get('direction').ljust(18)
+    direction = dep.get('direction').ljust(17)
     arrival = dep.get('arrival')
 
     if arrival == 0:
