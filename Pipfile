@@ -1,0 +1,21 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+dvb = {git = "git://github.com/kiliankoe/dvbpy.git", editable = true, ref = "webapi"}
+python-telegram-bot = "==9.0.0"
+geopy = "==1.11.0"
+
+
+[dev-packages]
+
+
+
+[requires]
+
+python_version = "3.6"
