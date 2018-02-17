@@ -1,6 +1,11 @@
-import dvb
+from datetime import datetime, timedelta
+import logging
+
+from dvb import Departure, Stop
 from telegram.ext import CommandHandler
 from telegram.parsemode import ParseMode
+
+stop_id_cache = dict()
 
 
 def _monitor_cmd(bot, update, args):
@@ -12,25 +17,36 @@ def _monitor_cmd(bot, update, args):
                                   '/a Hauptbahnhof - /a ist kurz für /abfahrten und funktioniert exakt gleich')
         return
 
-    if len(args) > 1:
-        if args[-1].isdigit():
-            offset = args[-1]
-            stop = ' '.join(args[:-1])
-        else:
-            offset = 0
-            stop = ' '.join(args)
-    else:
-        offset = 0
-        stop = ' '.join(args)
+    offset = 0
+    stop_query = ' '.join(args)
+    if len(args) > 1 and args[-1].isdigit():
+        offset = int(args[-1])
+        stop_query = ' '.join(args[:-1])
 
-    departures = dvb.monitor(stop, offset=offset)
+    if stop_query in stop_id_cache:
+        logging.debug(f'Found {stop_query} in cache.')
+        stop = stop_id_cache[stop_query]
+    else:
+        logging.debug(f'{stop_query} not in cache. Fetching id.')
+        stop_res = Stop.find(stop_query)
+        if len(stop_res.get('stops')) == 0:
+            update.message.reply_text('Keine solche Haltestelle gefunden.')
+            return
+        stop = stop_res['stops'][0].id
+        stop_id_cache[stop_query] = stop
+
+    now = datetime.now()
+    date_offset = now + timedelta(minutes=offset)
+
+    departure_res = Departure.fetch(stop, time=date_offset)
+    departures = departure_res['departures'][:10]
 
     if len(departures) == 0:
         update.message.reply_text('Keine Abfahrten gefunden.')
         return
 
     joined_departures = '\n'.join([_format_departure(dep) for dep in departures])
-    msg = f'''*Abfahrten {stop}*
+    msg = f'''Abfahrten *{departure_res["name"]}*
     
 ```
 {joined_departures}
@@ -40,15 +56,15 @@ def _monitor_cmd(bot, update, args):
     update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
 
-def _format_departure(dep: dict) -> str:
-    line = dep.get('line').ljust(5)
-    direction = dep.get('direction').ljust(17)
-    arrival = dep.get('arrival')
+def _format_departure(dep: Departure) -> str:
+    line = dep.line_name.ljust(5)
+    direction = dep.direction.ljust(17)
+    eta = dep.fancy_eta()
 
-    if arrival == 0:
-        arrival = ''
+    if eta == 0:
+        eta = ''
 
-    return f'{line} {direction} {arrival}'
+    return f'{line} {direction} {eta}'
 
 
 monitor_handler = CommandHandler('abfahrten', _monitor_cmd, pass_args=True)
