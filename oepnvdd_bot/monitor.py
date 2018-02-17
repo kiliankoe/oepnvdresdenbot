@@ -38,7 +38,7 @@ def _monitor_cmd(bot, update, args):
     now = datetime.now()
     date_offset = now + timedelta(minutes=offset)
 
-    departure_res = Departure.fetch(stop, time=date_offset)
+    departure_res = Departure.for_stop(stop, time=date_offset)
     departures = departure_res['departures'][:10]
 
     if len(departures) == 0:
