@@ -2,9 +2,12 @@ FROM python:3.6
 
 WORKDIR /oepnvdd_bot
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install pipenv
+COPY Pipfile .
+COPY Pipfile.lock .
+RUN pipenv install
 
 COPY . .
 
+ENTRYPOINT ["pipenv", "run"]
 CMD ["python", "main.py"]
