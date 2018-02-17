@@ -1,38 +1,36 @@
 import csv
-import dvb
+
 import geopy.distance
+from dvb import Stop
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from telegram.keyboardbutton import KeyboardButton
-from telegram.replykeyboardmarkup import ReplyKeyboardMarkup
 from telegram.parsemode import ParseMode
+from telegram.replykeyboardmarkup import ReplyKeyboardMarkup
 
 NEAREST_STOPS_COUNT = 5
 
 
 def _search_cmd(bot, update, args):
-    update.message.reply_text('Dieser Befehl funktioniert leider aktuell nicht. '
-                              'Probiere es doch bitte demnächst wieder.')
-    return
-
     query = ' '.join(args)
-    results = dvb.find(query)
+    print(query)
+    stop_res = Stop.find(query)
 
-    if len(results) == 0:
+    if len(stop_res['stops']) == 0:
         update.message.reply_text('Keine Resultate gefunden.')
         return
 
-    first = results[0]
-    name = first.get('name')
-    coords = first.get('coords')
-    city = first.get('city')
+    first_stop = stop_res['stops'][0]
+    name = first_stop.name
+    coords = (first_stop.latitude, first_stop.longitude)
+    place = first_stop.place
 
-    if city is not None:
-        update.message.reply_text(f'Meintest du {name} in {city}?')
+    if place is not None:
+        update.message.reply_text(f'Meintest du {name} in {place}?')
     else:
         update.message.reply_text(f'Meintest du {name}?')
 
     if len(coords) == 2:
-        bot.send_location(latitude=coords[0], longitude=coords[1])
+        bot.send_location(chat_id=update.message.chat_id, latitude=coords[0], longitude=coords[1])
 
 
 search_handler = CommandHandler('suche', _search_cmd, pass_args=True)
@@ -59,7 +57,6 @@ def _nearest_stops(bot, update):
         msg = 'Nächstgelegene Haltestellen:\n'
         for stop in nearest_stops:
             msg += f'\n- {stop[0]} [{stop[1]:.0f}m](https://google.de/maps?q={stop[2][0]},{stop[2][1]})'
-
 
         reply_keyboard = [[KeyboardButton(text=f'/a {n[0]}')] for n in nearest_stops]
         bot.sendMessage(chat_id=update.message.chat_id,
