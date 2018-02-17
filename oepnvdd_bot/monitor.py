@@ -1,5 +1,5 @@
-from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timedelta
 
 from dvb import Departure, Stop
 from telegram.ext import CommandHandler

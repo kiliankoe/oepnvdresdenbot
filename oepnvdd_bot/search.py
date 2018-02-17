@@ -57,7 +57,7 @@ def _nearest_stops(bot, update):
 
     bot.send_message(chat_id=update.message.chat_id,
                      text='Die {} nächsten Haltestellen in deiner Umgebung sind diese hier.'
-                          .format(len(stop_res['stops'][:NEAREST_STOPS_COUNT])),
+                     .format(len(stop_res['stops'][:NEAREST_STOPS_COUNT])),
                      reply_markup=reply_markup)
     return
 
