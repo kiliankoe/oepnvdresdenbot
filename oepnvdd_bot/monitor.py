@@ -35,8 +35,7 @@ def _monitor_cmd(bot, update, args):
         stop = stop_res['stops'][0].id
         stop_id_cache[stop_query] = stop
 
-    now = datetime.now()
-    date_offset = now + timedelta(minutes=offset)
+    date_offset = datetime.now() + timedelta(minutes=offset)
 
     departure_res = Departure.for_stop(stop, time=date_offset)
     departures = departure_res['departures'][:10]
