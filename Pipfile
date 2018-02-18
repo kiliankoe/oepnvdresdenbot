@@ -10,6 +10,7 @@ name = "pypi"
 dvb = {git = "git://github.com/kiliankoe/dvbpy.git", editable = true, ref = "webapi"}
 python-telegram-bot = "==9.0.0"
 geopy = "==1.11.0"
+pytz = "==2018.3"
 
 
 [dev-packages]

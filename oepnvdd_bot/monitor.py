@@ -1,5 +1,6 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import pytz
 
 from dvb import Departure, Stop
 from telegram.ext import CommandHandler
@@ -35,7 +36,9 @@ def _monitor_cmd(bot, update, args):
         stop = stop_res['stops'][0].id
         stop_id_cache[stop_query] = stop
 
-    date_offset = datetime.now() + timedelta(minutes=offset)
+    tz = pytz.timezone('Europe/Berlin')
+    now = datetime.now(tz=tz)  # explicitly pass correct timezone for Dresden
+    date_offset = now + timedelta(minutes=offset)
 
     departure_res = Departure.for_stop(stop, time=date_offset)
     departures = departure_res['departures'][:10]
@@ -45,7 +48,7 @@ def _monitor_cmd(bot, update, args):
         return
 
     joined_departures = '\n'.join([_format_departure(dep) for dep in departures])
-    msg = f'''Abfahrten *{departure_res["name"]}*
+    msg = f'''Abfahrten für *{departure_res["name"]}*
     
 ```
 {joined_departures}
