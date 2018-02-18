@@ -46,7 +46,7 @@
         "dvb": {
             "editable": true,
             "git": "git://github.com/kiliankoe/dvbpy.git",
-            "ref": "webapi"
+            "ref": "f70a6634b40129f19e1e55866888ae500e329351"
         },
         "future": {
             "hashes": [
