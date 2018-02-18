@@ -56,7 +56,7 @@ def _nearest_stops(bot, update):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     bot.send_message(chat_id=update.message.chat_id,
-                     text='Die {} nächsten Haltestellen in deiner Umgebung sind diese hier.'
+                     text='Die {} nächsten Haltestellen in deiner Umgebung sind diese hier:'
                      .format(len(stop_res['stops'][:NEAREST_STOPS_COUNT])),
                      reply_markup=reply_markup)
     return
