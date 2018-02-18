@@ -1,4 +1,4 @@
 # 🚌 oepnvdd_bot
 
-Want to get around Dresden via public transport? Just ask [@oepnvdd_bot](https://t.me/oepnvdd_bot) how to get from A to B!
+Want to get around Dresden via public transport? Just ask [@oepnvdresdenbot](https://t.me/oepnvdresdenbot) how to get from A to B!
 
