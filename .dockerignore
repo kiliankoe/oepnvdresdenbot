@@ -2,3 +2,5 @@
 venv
 .idea
 __pycache__
+deploy.sh
+.gitignore
