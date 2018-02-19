@@ -69,6 +69,7 @@ def parse_intent(message: str) -> Intent or None:
     params = json.loads(response.text)
 
     try:
+        _ = params['entities']['intent'][0]  # validate that wit.ai actually found an intent
         return Intent(params['entities'])
     except KeyError:
         return None
