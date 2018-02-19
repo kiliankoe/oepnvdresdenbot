@@ -4,6 +4,7 @@ import argparse
 
 from telegram.ext import Updater
 
+from oepnvdd_bot.generic import *
 from oepnvdd_bot.monitor import *
 from oepnvdd_bot.search import *
 from oepnvdd_bot.route import *
@@ -21,6 +22,8 @@ logging.basicConfig(level=numeric_level)
 if __name__ == '__main__':
     updater = Updater(os.getenv('TELEGRAM_BOT_TOKEN'))
     dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(message_handler)
 
     dispatcher.add_handler(monitor_handler)
     dispatcher.add_handler(monitor_shorthand_handler)

@@ -5,7 +5,7 @@ from telegram.inline.inlinekeyboardbutton import InlineKeyboardButton
 from telegram.inline.inlinekeyboardmarkup import InlineKeyboardMarkup
 from telegram.parsemode import ParseMode
 
-from .monitor import _format_departure
+from .dvb_api import format_departure
 
 NEAREST_STOPS_COUNT = 5
 
@@ -75,7 +75,7 @@ def _nearest_stops_callback(bot, update):
         bot.send_message(chat_id=update.callback_query.message.chat_id, text='Keine Abfahrten gefunden.')
         return
 
-    joined_departures = '\n'.join([_format_departure(dep) for dep in departures])
+    joined_departures = '\n'.join([format_departure(dep) for dep in departures])
     msg = f'''Abfahrten *{departure_res["name"]}*
 
 ```
