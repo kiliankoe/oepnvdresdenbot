@@ -33,7 +33,7 @@ def _message(bot, update):
 
         formatted_departures = '\n'.join([format_departure(dep) for dep in departures[:8]])
 
-        title = f'Abfahrten der {filter_lines[0]} für *{stop_name}*' if len(filter_lines) != 0 \
+        title = f'Abfahrten der *{filter_lines[0]}* für *{stop_name}*' if len(filter_lines) != 0 \
             else f'Abfahrten für *{stop_name}*'
 
         msg = f'''{title}
