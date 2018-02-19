@@ -6,31 +6,29 @@ from telegram.ext import MessageHandler, Filters
 from telegram.parsemode import ParseMode
 
 from .dvb_api import departures_for_stop_name, format_departure
+from .natural import *
 
 
 def _message(bot, update):
-    intent_res = _read_intent(update.message.text)
-    entities = intent_res.get('entities')
-    intents = entities.get('intent')
-    if intents is None or len(intents) == 0:
-        update.message.reply_text('Das habe ich leider nicht verstanden 😕')
+    intent = parse_intent(update.message.text)
+    if intent is None:
+        update.message.reply_text('Das habe ich leider nicht verstanden 😕 Aktuell bin ich in der Lage die meisten '
+                                  'Fragen nach aktuellen Abfahrtszeiten mit optionaler Angabe einer Linie zu '
+                                  'verstehen. Wenn etwas einfach nicht funktionieren will, du dir aber sicher bist, '
+                                  'dass das klappen sollte, dann schreib\' bitte @kiliankoe an. Danke 😊')
         return
 
-    intent = intents[0].get('value')
-
-    if intent == 'departure':
-        locations = entities.get('location')
+    if intent.type == Intent.Type.DEPARTURE:
+        locations = intent.locations
         if locations is None or len(locations) == 0:
             update.message.reply_text('Ich habe leider nicht verstanden wo du nach aktuellen Abfahrtsinformationen '
                                       'suchst.')
             return
-        location = locations[0].get('value')
 
-        lines = entities.get('line_identifier')
-        if lines is None or len(lines) == 0:
+        location = locations[0]
+        filter_lines = intent.lines
+        if filter_lines is None:
             filter_lines = []
-        else:
-            filter_lines = [l['value'] for l in lines]
 
         stop_name, departures = departures_for_stop_name(location, line_filter=filter_lines)
         if len(departures) == 0:
@@ -50,13 +48,18 @@ def _message(bot, update):
     '''
         update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
 
-    elif intent == 'search':
-        update.message.reply_text('Das habe ich leider nicht verstanden, entschuldige.')
-    elif intent == 'location_search':
-        update.message.reply_text('Das habe ich leider nicht verstanden, entschuldige.')
-    elif intent == 'route':
-        update.message.reply_text('Aktuell kann ich leider noch nicht nach Routen suchen. Aber sehr sehr bald, '
-                                  'versprochen! ✌️')
+    elif intent.type == Intent.Type.LOCATION_SEARCH:
+        update.message.reply_text('Meine Erkennung von natürlicher Sprache ist aktuell noch in der Alpha-Phase. '
+                                  'Bitte gib\' mir noch eine kleine Weile, bevor ich für dich nach Orten suchen kann.')
+    elif intent.type == Intent.Type.ROUTE:
+        update.message.reply_text(f'Meine Erkennung von natürlicher Sprache ist aktuell noch in der Alpha-Phase. '
+                                  f'Bitte gib\' mir noch eine kleine Weile, bevor ich für dich nach Routen suchen '
+                                  f'kann. (route_info: von `{intent.origin}` nach `{intent.destination}`)')
+    elif intent.type == Intent.Type.DISRUPTIONS:
+        update.message.reply_text(f'Meine Erkennung von natürlicher Sprache ist aktuell noch in der Alpha-Phase. '
+                                  f'Bitte gib\' mir noch eine kleine Weile, bevor ich für dich nach aktuellen '
+                                  f'Störungen suchen kann. (disruption_info: ort: `{intent.locations}`, '
+                                  f'linien: `{intent.lines}`)')
 
 
 def _read_intent(text: str) -> dict:
