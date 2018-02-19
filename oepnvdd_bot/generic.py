@@ -1,7 +1,3 @@
-import json
-import os
-
-import requests
 from telegram.ext import MessageHandler, Filters
 from telegram.parsemode import ParseMode
 
