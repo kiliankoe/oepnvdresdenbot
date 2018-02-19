@@ -50,12 +50,11 @@ def _message(bot, update):
     elif intent.type == Intent.Type.ROUTE:
         update.message.reply_text(f'Meine Erkennung von natürlicher Sprache ist aktuell noch in der Alpha-Phase. '
                                   f'Bitte gib\' mir noch eine kleine Weile, bevor ich für dich nach Routen suchen '
-                                  f'kann. (route_info: von `{intent.origin}` nach `{intent.destination}`)')
+                                  f'kann. (route: `{intent.origin}` → `{intent.destination}`)')
     elif intent.type == Intent.Type.DISRUPTIONS:
         update.message.reply_text(f'Meine Erkennung von natürlicher Sprache ist aktuell noch in der Alpha-Phase. '
                                   f'Bitte gib\' mir noch eine kleine Weile, bevor ich für dich nach aktuellen '
-                                  f'Störungen suchen kann. (disruption_info: ort: `{intent.locations}`, '
-                                  f'linien: `{intent.lines}`)')
+                                  f'Störungen suchen kann. (disruption: `{intent.lines}` @ `{intent.locations}`)')
 
 
 def _read_intent(text: str) -> dict:
